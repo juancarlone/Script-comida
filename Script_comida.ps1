@@ -2,6 +2,10 @@
 #   Este script se presenta como una manera de explorar Powershell para resolver un problema real   #
 #                                                                                                   #
 
+# Utiles
+$almuerzo = @(get-content "C:\Users\Jc\Documents\Script\Script comida\almuerzo.txt")
+$cena = @(get-content "C:\Users\Jc\Documents\Script\Script comida\cena.txt")
+
 # Funciones
 
 # Menú de opciones
@@ -17,6 +21,7 @@ function menú {
     Start-Sleep -s 0.5
     Write-Host "3. Crear menú bisemanal"
     Start-Sleep -s 0.5
+
     Write-Host "4. Ver registro de comidas"
     Start-Sleep -s 0.5
     Write-Host "5. Salir"
@@ -31,7 +36,6 @@ while (($opt = Read-Host "Selecciona una opcion") -ne 5){
         1 {
             Clear-Host
             Write-Host "------------------------------";
-            $almuerzo = @(get-content "C:\Users\Jc\Documents\Script\Script comida\almuerzo.txt")
             $almu = @(Read-Host "Introduce el almuerzo a añadir ")
             while ($true) {
                 if (($almuerzo -like $almu)) {
@@ -39,7 +43,7 @@ while (($opt = Read-Host "Selecciona una opcion") -ne 5){
                 } 
                 else {
                     $almuerzo += $almu
-                    $almuerzo | out-file -force -append "C:\Users\Jc\Documents\Script\Script comida\almuerzo.txt"   
+                    Set-Content -path "C:\Users\Jc\Documents\Script\Script comida\almuerzo.txt" -value ($almuerzo)
                     break
                 }   
             }            
@@ -52,7 +56,6 @@ while (($opt = Read-Host "Selecciona una opcion") -ne 5){
         2 {
             Clear-Host
             Write-Host "------------------------------";
-            $cena = @(get-content "C:\Users\Jc\Documents\Script\Script comida\cena.txt")
             $cen = @(Read-Host "Introduce el cena a añadir ")
             while ($true) {
                 if (($cena -like $cen)) {
@@ -60,7 +63,7 @@ while (($opt = Read-Host "Selecciona una opcion") -ne 5){
                 } 
                 else {
                     $cena += $cen
-                    $cena | out-file -force -append "C:\Users\Jc\Documents\Script\Script comida\cena.txt"   
+                    Set-Content -path "C:\Users\Jc\Documents\Script\Script comida\cena.txt" -value ($cena)   
                     break
                 }   
             }            
@@ -73,9 +76,11 @@ while (($opt = Read-Host "Selecciona una opcion") -ne 5){
         3 {
             if ( $almuerzo.count -lt 7) {
                 Write-Host "Todavia faltan $(7 - $almuerzo.count) almuerzos";
+                Start-Sleep -s 2
             }
             elseif ($cena.count -lt 7) {
                 Write-Host "Todavia faltan $(7 -$cena.count) cenas";
+                Start-Sleep -s 2
             }
 # Vamos a añadir un parametro para no repetir comidas
             else
