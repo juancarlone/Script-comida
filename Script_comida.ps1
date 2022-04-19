@@ -2,24 +2,8 @@
 #   Este script se presenta como una manera de explorar Powershell para resolver un problema real   #
 #                                                                                                   #
 
-# Empezamos con algunas variables de datos
-$almuerzo = @(get-content  "C:\Users\Jc\Documents\Script\Script comida\almuerzo.txt")
-$cena = @(get-content  "C:\Users\Jc\Documents\Script\Script comida\cena.txt")
-
 # Funciones
-function calccomida {
-[int]$max =$almuerzo.count
-if ([int]$cena.count -gt [int]$almuerzo.count) { max = $cena.count;}
-    $comida = for ($i = 0; $i -lt $max; $i++)
-    {
-        Write-Verbose "($almuerzo[$i]),($cena[$i])"
-        [pscustomobject]@{
-                Almuerzo = $almuerzo[$i]
-                Cena = $cena[$i]
-            }
-    }
-    $comida | out-file -Append "C:\Users\Jc\Documents\Script\Script comida\comida.txt"
-}
+
 # Menú de opciones
 write-host "Bienvenido al menú semanal de comida"
 function menú {
@@ -47,16 +31,15 @@ while (($opt = Read-Host "Selecciona una opcion") -ne 5){
         1 {
             Clear-Host
             Write-Host "------------------------------";
-            $almu = @()
-            $almu += Read-Host "Introduce el almuerzo a añadir: "
+            $almuerzo = @(get-content "C:\Users\Jc\Documents\Script\Script comida\almuerzo.txt")
+            $almu = @(Read-Host "Introduce el almuerzo a añadir ")
             while ($true) {
                 if (($almuerzo -like $almu)) {
                     $almu = @(Read-Host "Valor ya integrado, Introduce nuevo almuerzo") 
                 } 
                 else {
                     $almuerzo += $almu
-                    $almuerzo | out-file -append "C:\Users\Jc\Documents\Script\Script comida\almuerzo.txt"
-                    calccomida   
+                    $almuerzo | out-file -force -append "C:\Users\Jc\Documents\Script\Script comida\almuerzo.txt"   
                     break
                 }   
             }            
@@ -69,23 +52,23 @@ while (($opt = Read-Host "Selecciona una opcion") -ne 5){
         2 {
             Clear-Host
             Write-Host "------------------------------";
-            $cen = @()
-            $cen += Read-Host "Introduce la cena a añadir: "
+            $cena = @(get-content "C:\Users\Jc\Documents\Script\Script comida\cena.txt")
+            $cen = @(Read-Host "Introduce el cena a añadir ")
             while ($true) {
                 if (($cena -like $cen)) {
-                    $cen = @(Read-Host "Valor ya integrado, Introduce nueva cena") 
+                    $cen = @(Read-Host "Valor ya integrado, Introduce nuevo cena") 
                 } 
                 else {
                     $cena += $cen
-                    $cena | out-file -append "C:\Users\Jc\Documents\Script\Script comida\cena.txt"
-                    calccomida   
+                    $cena | out-file -force -append "C:\Users\Jc\Documents\Script\Script comida\cena.txt"   
                     break
-                } 
+                }   
+            }            
+
             Write-Host "El registro actualizado es: $cena"
             Start-Sleep -s 3
             Write-Host "------------------------------";
             break
-            }
         }
         3 {
             if ( $almuerzo.count -lt 7) {
@@ -138,9 +121,11 @@ while (($opt = Read-Host "Selecciona una opcion") -ne 5){
             Write-Host "------------------------------";
             Write-Host "Almuerzos: ";
             $almuerzo
-            Write-Host ""
+            Write-Host " "
+            Write-Host "------------------------------";
             Write-Host "Cenas: ";
             $cena
+            Write-Host " "
             Write-Host "------------------------------";
             Start-Sleep -s 3
             break
